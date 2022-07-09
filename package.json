@@ -1,0 +1,66 @@
+{
+  "name": "tntra-nodejs-bootcamp",
+  "version": "0.0.1",
+  "description": "Tntra bootcamp on nodejs mongodb express server.",
+  "main": "index.js",
+  "author": "Tntra.io",
+  "license": "MIT",
+  "scripts": {
+    "coverage": "jest --coverage",
+    "start": "export ENVIRONMENT_NAME=local && nodemon",
+    "postinstall": "link-module-alias",
+    "preinstall": "command -v link-module-alias && link-module-alias clean || true",
+    "format": "prettier-standard './**/**/*.js'",
+    "lint": "npm run lint:js",
+    "lint:eslint": "eslint --ignore-path .gitignore --ignore-pattern server/bin",
+    "lint:eslint:fix": "eslint --ignore-path .gitignore --ignore-pattern server/bin --fix",
+    "lint:js": "npm run lint:eslint -- . ",
+    "prettify": "prettier --write"
+  },
+  "engines": {
+    "node": "14.19.x"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "mongo",
+    "mongoose",
+    "mongodb",
+    "node-express",
+    "node-express-mongo"
+  ],
+  "dependencies": {
+    "bunyan": "^1.8.15",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^16.0.1",
+    "express": "~4.16.1",
+    "helmet": "^5.1.0",
+    "mongoose": "^6.4.0",
+    "morgan": "~1.9.1",
+    "nodemon": "^2.0.16"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.5",
+    "@babel/eslint-parser": "^7.18.2",
+    "@babel/node": "^7.18.5",
+    "@babel/plugin-transform-runtime": "^7.18.5",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/runtime": "^7.18.3",
+    "eslint": "^8.18.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^28.1.1",
+    "jest-coverage-badges": "^1.1.2",
+    "link-module-alias": "^1.2.0",
+    "prettier": "^2.7.0",
+    "prettier-standard": "^16.4.1",
+    "supertest": "^6.2.2"
+  },
+  "_moduleAliases": {
+    "config": "./server/config",
+    "server": "./server",
+    "database": "./server/database",
+    "utils": "./server/utils"
+  }
+}

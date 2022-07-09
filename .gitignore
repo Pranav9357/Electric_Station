@@ -1,0 +1,25 @@
+.DS_Store
+.idea
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# dotenv environment variables file
+.env
+.env.local
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Project exclude paths
+/node_modules/
+
+# Optional npm cache directory
+.npm

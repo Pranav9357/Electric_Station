@@ -1,0 +1,28 @@
+{
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": ["./jest.setup.js"],
+    "collectCoverageFrom": [
+        "**/server/**",
+        "!**/node_modules/**",
+        "!**/dist/**",
+        "!**/models/**"
+    ],
+    "coverageReporters": ["json-summary", "text", "lcov"],
+    "testPathIgnorePatterns": ["<rootDir>/dist/"],
+    "moduleNameMapper": {
+        "@server(.*)$": "<rootDir>/server/$1",
+        "@(database|services|gql|middleware|daos|utils)(.*)$": "<rootDir>/server/$1/$2"
+    },
+    "coverageThreshold": {
+        "global": {
+            "statements": 85,
+            "branches": 85,
+            "functions": 85,
+            "lines": 85
+        }
+    },
+    "coveragePathIgnorePatterns": [
+        "<rootDir>/server/utils/routeLister",
+        "<rootDir>/server/utils/random.js"
+    ]
+}
