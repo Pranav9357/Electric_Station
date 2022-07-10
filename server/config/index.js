@@ -4,7 +4,6 @@ require('dotenv').config({
 });
 
 module.exports = () => ({
-        port: process.env.PORT,
-        memory: true
-    }
-);
+    port: process.env.PORT,
+    memory: true
+});
