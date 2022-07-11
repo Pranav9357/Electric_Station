@@ -1,23 +1,25 @@
 import User from 'database/model/user';
 import bcrypt from 'bcryptjs';
+import authentication from 'server/utils/authentication';
+import jwt from 'jsonwebtoken';
 
 export const UserRestApi = ({ router }) => {
-    router.get('/allUser', (req, res) => {
+    router.get('/allUser', authentication, (req, res) => {
         User.find()
-            .then(response => {
-                res.json({
-                    response,
-                    status: 200
-                });
+            .then(users => {
+                if(users != null) {
+                    res.send({
+                        users
+                    }).status(200)
+                } else {
+                    res.status(404).send({
+                       message: 'No User Found' 
+                    })
+                }
             })
-            .catch(() => {
-                res.json({
-                    message: 'Error Occured!'
-                });
-            });
     });
 
-    router.get('/:id', (req, res) => {
+    router.get('/:id', authentication, (req, res) => {
         let userId = req.params.userId;
         User.findById(userId)
             .then(response => {
@@ -43,8 +45,8 @@ export const UserRestApi = ({ router }) => {
             let user = new User({
                 name: req.body.name,
                 email: req.body.email,
-                password: req.body.password,
-                phoneNumber: hashedPass
+                password: hashedPass,
+                phoneNumber: req.body.phoneNumber
             });
             user.save()
                 .then(() => {
@@ -61,7 +63,7 @@ export const UserRestApi = ({ router }) => {
         });
     });
 
-    router.put('/:id', (req, res) => {
+    router.put('/:id', authentication, (req, res) => {
         bcrypt.hash(req.body.password, 10, (err, hashedPass) => {
             if (err) {
                 res.json({
@@ -92,7 +94,7 @@ export const UserRestApi = ({ router }) => {
         });
     });
 
-    router.delete('/:id', (req, res) => {
+    router.delete('/:id', authentication, (req, res) => {
         let userId = req.body.id;
         User.findByIdAndRemove(userId)
             .then(() => {
@@ -109,10 +111,10 @@ export const UserRestApi = ({ router }) => {
     });
 
     router.post('/loginUser', (req, res) => {
-        let name = req.body.name;
+        let email = req.body.email;
         let password = req.body.password;
 
-        User.findOne({ name: name }).then(user => {
+        User.findOne({ email: email }).then(user => {
             if (user) {
                 bcrypt.compare(password, user.password, (err, result) => {
                     if (err) {

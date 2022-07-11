@@ -13,6 +13,6 @@ export default app => {
     ProviderRestApi({ router });
 
     app.use('/todo', router);
-    app.use('/user', authentication, router);
-    app.use('/provider', authentication, router);
+    app.use('/user', router);
+    app.use('/provider', router);
 };

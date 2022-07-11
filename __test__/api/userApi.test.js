@@ -8,6 +8,7 @@ describe('UserAPi tests', () => {
         it('response with json', async () => {
             const res = await supertest(app).get('/user/allUser');
             expect(res.statusCode).toEqual(200);
+            expect(JSON.stringify(res.body.response)).toContain('')
         });
 
         it('throw error', async () => {

@@ -1,8 +1,10 @@
 import Provider from 'database/model/provider';
-import { jwt } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+import authentication from 'server/utils/authentication';
+import bcrypt from 'bcryptjs';
 
 export const ProviderRestApi = ({ router }) => {
-    router.get('/allProvider', (req, res) => {
+    router.get('/allProvider', authentication, (req, res) => {
         Provider.find()
             .then(response => {
                 res.json({
@@ -17,7 +19,7 @@ export const ProviderRestApi = ({ router }) => {
             });
     });
 
-    router.get('/:id', (req, res) => {
+    router.get('/:id', authentication, (req, res) => {
         let providerId = req.params.id;
         Provider.findById(providerId)
             .then(response => {
@@ -33,37 +35,47 @@ export const ProviderRestApi = ({ router }) => {
             });
     });
     router.post('/addProvider', (req, res) => {
-        let provider = new Provider({
-            name: req.body.name,
-            address: req.body.address,
-            email: req.body.email,
-            password: req.body.password,
-            phoneNumber: req.body.phoneNumber,
-            noOfStation: req.body.noOfStation,
-            location: {
-                type: 'Path',
-                coordinates: [
-                    parseFloat(req.body.longitude),
-                    parseFloat(req.body.latitude)
-                ]
+        bcrypt.hash(req.body.password, 10, (err, hashedPass) => {
+            if (err) {
+                res.json({
+                    err
+                });
             }
-        });
-        provider
-            .save()
-            .then(() => {
-                res.json({
-                    message: 'Provider Added Successfully!',
-                    status: 200
-                });
-            })
-            .catch(() => {
-                res.json({
-                    message: 'Error Occured!'
-                });
+
+            let provider = new Provider({
+                name: req.body.name,
+                address: req.body.address,
+                email: req.body.email,
+                password: hashedPass,
+                phoneNumber: req.body.phoneNumber,
+                noOfStation: req.body.noOfStation,
+                location: {
+                    type: req.body.type,
+                    coordinates: {
+                        type: [
+                            parseFloat(req.body.longitude),
+                            parseFloat(req.body.latitude)
+                        ]
+                    }
+                }
             });
+            provider
+                .save()
+                .then(() => {
+                    res.json({
+                        message: 'Provider Added Successfully!',
+                        status: 200
+                    });
+                })
+                .catch(() => {
+                    res.json({
+                        message: 'Error Occured!'
+                    });
+                });
+        });
     });
 
-    router.put('/:id', (req, res) => {
+    router.put('/:id', authentication, (req, res) => {
         let providerId = req.params.id;
 
         let updateData = {
@@ -74,11 +86,13 @@ export const ProviderRestApi = ({ router }) => {
             phoneNumber: req.body.phoneNumber,
             noOfStation: req.body.noOfStation,
             location: {
-                type: 'Path',
-                coordinates: [
-                    parseFloat(req.body.longitude),
-                    parseFloat(req.body.latitude)
-                ]
+                type: req.body.type,
+                coordinates: {
+                    type: [
+                        parseFloat(req.body.longitude),
+                        parseFloat(req.body.latitude)
+                    ]
+                }
             }
         };
 
@@ -96,7 +110,7 @@ export const ProviderRestApi = ({ router }) => {
             });
     });
 
-    router.delete('/:id', (req, res) => {
+    router.delete('/:id', authentication, (req, res) => {
         let providerId = req.params.id;
         Provider.findByIdAndRemove(providerId)
             .then(() => {
@@ -113,10 +127,10 @@ export const ProviderRestApi = ({ router }) => {
     });
 
     router.post('/loginProvider', (req, res) => {
-        let name = req.body.name;
+        let email = req.body.email;
         let password = req.body.password;
 
-        Provider.findOne({ name: name }).then(provider => {
+        Provider.findOne({ email: email }).then(provider => {
             if (provider) {
                 bcrypt.compare(password, provider.password, (err, result) => {
                     if (err) {

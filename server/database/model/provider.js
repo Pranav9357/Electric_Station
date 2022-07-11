@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import {schema} from 'database/model/location'
 
 const providerSchema = mongoose.Schema({
     name: {
@@ -24,18 +25,9 @@ const providerSchema = mongoose.Schema({
     noOfStation: {
         type: Number,
         required: true
-    },
-    location: {
-        type: {
-            type: String,
-            required: true
-        },
-        coordinates: []
     }
 });
 
-providerSchema.index({ location: '2dsphere' });
-
 const Provider = mongoose.model('Provider', providerSchema);
 
-module.exports = Provider;
+module.exports = Provider
